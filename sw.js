@@ -2,7 +2,7 @@
 // Provides offline caching + faster load + install stability
 
 // 1. UPDATE THIS NAME EVERY TIME YOU DEPLOY A NEW VERSION
-const CACHE_NAME = 'fitness-chit-v2'; 
+const CACHE_NAME = 'fitness-chit-v3'; 
 
 // 2. MAKE SURE THESE MATCH YOUR ACTUAL GITHUB FILES
 const ASSETS = [
