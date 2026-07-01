@@ -1,7 +1,7 @@
 {
   "name": "健身單 · Daily Training Chit",
   "short_name": "健身單",
-  "start_url": ".,
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#F0E6C8",
   "theme_color": "#F0E6C8",
