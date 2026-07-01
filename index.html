@@ -36,7 +36,6 @@
     font-size: 15px;
     line-height: 1.4;
     min-height: 100vh;
-    /* Aged paper texture */
     background-image:
       radial-gradient(ellipse at 15% 8%,  rgba(120,80,40,0.10) 0, transparent 42%),
       radial-gradient(ellipse at 88% 22%, rgba(140,90,40,0.09) 0, transparent 40%),
@@ -47,7 +46,6 @@
   }
   .mono { font-family: "SF Mono", "JetBrains Mono", "Courier New", ui-monospace, monospace; font-feature-settings: "tnum" 1; }
 
-  /* -------- Chit container -------- */
   .chit {
     max-width: 440px;
     margin: 0 auto;
@@ -55,7 +53,6 @@
     position: relative;
   }
 
-  /* -------- Header -------- */
   .top {
     text-align: center;
     padding: 6px 0 10px;
@@ -67,7 +64,7 @@
     font-size: 30px;
     letter-spacing: 14px;
     font-weight: 700;
-    padding-left: 14px; /* offset letter-spacing */
+    padding-left: 14px;
   }
   .en {
     font-size: 10px;
@@ -102,7 +99,6 @@
     letter-spacing: 1px;
   }
 
-  /* -------- Tear line -------- */
   .tear {
     height: 1px;
     margin: 14px -4px;
@@ -121,7 +117,6 @@
   .tear::before { left: -5px; }
   .tear::after  { right: -5px; }
 
-  /* -------- Section headings -------- */
   .sec-head {
     display: flex;
     align-items: baseline;
@@ -152,7 +147,6 @@
     letter-spacing: 2px;
   }
 
-  /* -------- Buttons -------- */
   button {
     font-family: inherit;
     cursor: pointer;
@@ -196,7 +190,6 @@
     font-size: 11px;
   }
 
-  /* -------- Rotation / MTR line -------- */
   .mtr {
     display: flex;
     align-items: flex-start;
@@ -291,7 +284,6 @@
     content: "✓ ";
   }
 
-  /* -------- Workout Log Table -------- */
   .log-table {
     width: 100%;
     border-collapse: collapse;
@@ -337,7 +329,6 @@
     margin-top: 2px;
   }
 
-  /* -------- Protein -------- */
   .protein-head {
     display: flex;
     justify-content: space-between;
@@ -453,7 +444,6 @@
   input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   input:focus { outline: none; border-color: var(--stamp); background: var(--paper); }
 
-  /* -------- Bodyweight log -------- */
   .log {
     list-style: none;
     padding: 0;
@@ -502,7 +492,6 @@
   }
   .btn-del-weight:active { color: var(--stamp); }
 
-  /* -------- Sleep / Wind-down -------- */
   .sleep-row {
     display: flex;
     align-items: center;
@@ -533,7 +522,7 @@
     line-height: 1;
   }
   .sleep-row.secondary .checkbox { width: 24px; height: 24px; font-size: 14px; }
-  
+
   .checkbox.on {
     background: var(--teal);
     border-color: var(--teal);
@@ -579,7 +568,6 @@
     margin-top: 3px;
   }
 
-  /* -------- Footer -------- */
   .foot {
     text-align: center;
     font-family: "Courier New", monospace;
@@ -597,7 +585,6 @@
     margin-bottom: 4px;
   }
 
-  /* -------- Loading -------- */
   .loading {
     position: fixed;
     inset: 0;
@@ -626,7 +613,6 @@
     75%  { content: "..."; }
   }
 
-  /* Toast */
   .toast {
     position: fixed;
     bottom: 20px;
@@ -653,7 +639,6 @@
     .quick button b { font-size: 14px; }
   }
 
-  /* -------- Greeting banner -------- */
   .greet {
     margin: 10px 0 -4px;
     padding: 8px 10px;
@@ -678,7 +663,6 @@
   }
   .greet .msg { flex: 1; text-transform: uppercase; }
 
-  /* -------- Rest Timer -------- */
   .timer-wrap {
     text-align: center;
   }
@@ -725,7 +709,6 @@
   .timer-controls .go { }
   .timer-controls .go.pause { background: var(--ink); border-color: var(--ink); }
 
-  /* -------- Install / Save-to-Phone -------- */
   .save-phone {
     display: block;
     text-align: center;
@@ -742,7 +725,6 @@
   }
   .save-phone::before { content: "📱 "; }
 
-  /* -------- Modal -------- */
   .modal {
     position: fixed; inset: 0;
     background: rgba(31,23,16,0.55);
@@ -825,7 +807,6 @@
     border-radius: 1px;
   }
 
-  /* ---------- Office mode: discreet memo look ---------- */
   body.office { background: #f6f2e8; }
   body.office .chit { background-image: none; }
   body.office .no-stamp, body.office .stamp-active, body.office .greet, body.office .save-phone { display: none !important; }
@@ -856,7 +837,6 @@
   }
   body.office .office-toggle { border-color: var(--ink); color: var(--ink); }
 
-  /* ---------- Summary / 7-day report ---------- */
   .summary {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -927,7 +907,7 @@
     </div>
     <button class="stamp stamp-action" id="btn-workout">STAMP TODAY</button>
     <button class="ghost" id="btn-emergency" style="width: 100%; margin-top: 6px; padding: 10px; font-size: 11px;">應急訓練 (15 MIN)</button>
-    
+
     <div class="undo-row" id="undo-row" style="display:none; gap: 12px;">
       <button id="btn-undo-workout">↺ UNDO STAMP</button>
     </div>
@@ -1024,7 +1004,7 @@
       <span class="en">Wind-Down & Readiness</span>
       <span class="num">§6</span>
     </div>
-    
+
     <div class="sleep-row">
       <div class="checkbox" id="sleep-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
       <div class="sleep-label">
@@ -1260,13 +1240,13 @@
 
   // ---------- Date helpers ----------
   function todayKey(d) {
-  let date = d ? new Date(d) : new Date();
-  date.setHours(date.getHours() - 6);
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
+    let date = d ? new Date(d) : new Date();
+    date.setHours(date.getHours() - 6);
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
   function fmtDate(k) { const [y,m,d] = k.split("-"); return `${d}.${m}.${y}`; }
   function fmtDateShort(k) { const [_,m,d] = k.split("-"); return `${d}/${m}`; }
   function dayName(k) {
@@ -1294,17 +1274,17 @@
 
   function ensureToday() {
     if (!state.days[today]) {
-      state.days[today] = { 
-        protein: 0, 
-        sleepDone: false, 
+      state.days[today] = {
+        protein: 0,
+        sleepDone: false,
         caffeineFree: false,
         cooldownDone: false,
-        workoutDone: false, 
+        workoutDone: false,
         workoutType: null,
         isEmergency: false,
         logs: {} // e.g. { "p1": "60kg x 8", "p2": "20kg x 10" }
       };
-      
+
       if (state.createdAt) {
         const [y,m,d] = state.createdAt.split("-").map(Number);
         const [yy,mm,dd] = today.split("-").map(Number);
@@ -1334,7 +1314,7 @@
     const mtr = document.getElementById("mtr");
     const day = state.days[today];
     const current = day.workoutDone ? day.workoutType : state.nextWorkout;
-    
+
     mtr.innerHTML = "";
     CYCLE.forEach((s) => {
       const el = document.createElement("div");
@@ -1364,7 +1344,7 @@
     const btnNormal = document.getElementById("btn-workout");
     const btnEmergency = document.getElementById("btn-emergency");
     const undoRow = document.getElementById("undo-row");
-    
+
     if (day.workoutDone) {
       btnNormal.textContent = day.isEmergency ? "EMERGENCY STAMPED" : "STAMPED";
       btnNormal.classList.add("done");
@@ -1384,7 +1364,6 @@
   function renderLog() {
     const table = document.getElementById("log-table");
     const day = state.days[today];
-    // Always show the log for the workout that is happening TODAY (or was done today)
     const activeCode = day.workoutDone ? day.workoutType : state.nextWorkout;
     const exercises = PPL_EXERCISES[activeCode] || [];
     const savedLogs = day.logs || {};
@@ -1472,15 +1451,15 @@
   }
   function renderSleep() {
     const day = state.days[today];
-    
+
     const sleepBox = document.getElementById("sleep-check");
     sleepBox.classList.toggle("on", !!day.sleepDone);
     sleepBox.setAttribute("aria-checked", String(!!day.sleepDone));
-    
+
     const cafBox = document.getElementById("caffeine-check");
     cafBox.classList.toggle("on", !!day.caffeineFree);
     cafBox.setAttribute("aria-checked", String(!!day.caffeineFree));
-    
+
     const coolBox = document.getElementById("cooldown-check");
     coolBox.classList.toggle("on", !!day.cooldownDone);
     coolBox.setAttribute("aria-checked", String(!!day.cooldownDone));
@@ -1635,7 +1614,7 @@
     const now = new Date(today + "T00:00:00");
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now); d.setDate(now.getDate() - i);
-      const key = d.toISOString().slice(0,10);
+      const key = todayKey(d);
       days.push({ key, data: state.days[key] });
     }
     let workouts = 0, sleeps = 0, pSum = 0, pDays = 0;
@@ -1681,13 +1660,13 @@
     }
   }
 
-  function renderAll() { 
-    renderRotation(); renderLog(); renderProtein(); renderWeights(); renderSleep(); renderGreet(); renderTimer(); renderSummary(); applyOfficeMode(); 
+  function renderAll() {
+    renderRotation(); renderLog(); renderProtein(); renderWeights(); renderSleep(); renderGreet(); renderTimer(); renderSummary(); applyOfficeMode();
   }
 
   // ---------- Events ----------
   function bind() {
-    
+
     // Core Workout Function Logic
     function markWorkoutDone(isEmergency = false) {
       const day = state.days[today];
@@ -1695,10 +1674,10 @@
       day.workoutType = state.nextWorkout;
       day.workoutDone = true;
       day.isEmergency = isEmergency;
-      
+
       const idx = CYCLE.findIndex(s => s.code === state.nextWorkout);
       state.nextWorkout = CYCLE[(idx + 1) % CYCLE.length].code;
-      
+
       save(); renderRotation(); renderLog(); renderGreet(); renderSummary();
       if (navigator.vibrate) navigator.vibrate(30);
     }
@@ -1731,7 +1710,7 @@
     document.getElementById("btn-save-log").addEventListener("click", () => {
       const day = state.days[today];
       if (!day.logs) day.logs = {};
-      
+
       const inputs = document.querySelectorAll("#log-table input");
       let savedAny = false;
       inputs.forEach(input => {
@@ -1744,7 +1723,7 @@
           delete day.logs[id];
         }
       });
-      
+
       save();
       if(savedAny) toast("Log saved");
     });
@@ -1800,8 +1779,8 @@
         const dateToDelete = e.target.dataset.date;
         if (confirm(`Remove weight log for ${dateToDelete}?`)) {
           state.weights = state.weights.filter(w => w.date !== dateToDelete);
-          save(); 
-          renderWeights(); 
+          save();
+          renderWeights();
           renderSummary();
           toast("Weight entry removed");
         }
@@ -1826,7 +1805,6 @@
     coolBox.addEventListener("click", () => toggleCheck("cooldownDone"));
     coolBox.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleCheck("cooldownDone"); } });
 
-
     document.querySelectorAll(".timer-presets button").forEach(b => {
       b.addEventListener("click", () => setPreset(parseInt(b.dataset.secs,10)));
     });
@@ -1847,7 +1825,7 @@
         }
         deferredPrompt = null;
       } else {
-        openModal(); 
+        openModal();
       }
     });
     document.getElementById("btn-office").addEventListener("click", () => {
@@ -1907,41 +1885,11 @@
         }
       };
       reader.readAsText(file);
-      importInput.value = ""; 
+      importInput.value = "";
     });
   }
 
   // ---------- Init ----------
-  async function init() {
-    try {
-      const loaded = store.get();
-      state = loaded && typeof loaded === "object" ? loaded : defaultState();
-      if (!state.nextWorkout) state.nextWorkout = "PUSH";
-      if (!state.days)        state.days = {};
-      if (!state.weights)     state.weights = [];
-      if (!state.createdAt)   state.createdAt = today;
-      if (typeof state.timerSecs !== "number") state.timerSecs = 90;
-      if (typeof state.reminderTime !== "string") state.reminderTime = "";
-      if (typeof state.officeMode !== "boolean") state.officeMode = false;
-      ensureToday();
-
-      // Initialize Supabase 
-      initSupabase();
-
-      if (supabaseClient) {
-        const cloudData = await pullFromCloud();
-        if (cloudData && cloudData.days) {
-          const localDayCount = Object.keys(state.days || {}).length;
-          const cloudDayCount = Object.keys(cloudData.days || {}).length;
-          if (cloudDayCount > localDayCount) {
-            state = { ...state, ...cloudData };
-            store.set(state);
-            setTimeout(() => toast("已從雲端同步最新紀錄"), 500);
-          }
-        }
-      }
-
-// ---------- Init ----------
   async function init() {
     try {
       const loaded = store.get();
@@ -1977,11 +1925,11 @@
       ensureToday();
     }
 
-    // 1. 顯示邏輯：使用「真實日期」標題
+    // 顯示邏輯：使用「真實日期」標題
     const realDate = new Date();
     document.getElementById("today-date").textContent = fmtDate(todayKey(realDate));
     document.getElementById("today-day").textContent = realDate.toLocaleDateString("en-US",{weekday:"short"}).toUpperCase();
-    
+
     document.getElementById("chit-no").textContent = String(state.chitNo || 1).padStart(3, "0");
 
     timer.secs = state.timerSecs || 90;
@@ -1990,7 +1938,7 @@
     bind();
     renderAll();
     scheduleReminder();
-    
+
     setInterval(renderGreet, 60 * 60 * 1000);
     setTimeout(() => document.getElementById("loading").classList.add("hide"), 300);
 
@@ -2004,7 +1952,7 @@
   } else {
     init();
   }
-})(); // 這裡結束 IIFE
+})();
 </script>
 </body>
 </html>
