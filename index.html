@@ -1941,6 +1941,34 @@
         }
       }
 
+// ---------- Init ----------
+  async function init() {
+    try {
+      const loaded = store.get();
+      state = loaded && typeof loaded === "object" ? loaded : defaultState();
+      if (!state.nextWorkout) state.nextWorkout = "PUSH";
+      if (!state.days)        state.days = {};
+      if (!state.weights)     state.weights = [];
+      if (!state.createdAt)   state.createdAt = today;
+      if (typeof state.timerSecs !== "number") state.timerSecs = 90;
+      if (typeof state.reminderTime !== "string") state.reminderTime = "";
+      if (typeof state.officeMode !== "boolean") state.officeMode = false;
+      ensureToday();
+
+      initSupabase();
+
+      if (supabaseClient) {
+        const cloudData = await pullFromCloud();
+        if (cloudData && cloudData.days) {
+          const localDayCount = Object.keys(state.days || {}).length;
+          const cloudDayCount = Object.keys(cloudData.days || {}).length;
+          if (cloudDayCount > localDayCount) {
+            state = { ...state, ...cloudData };
+            store.set(state);
+            setTimeout(() => toast("已從雲端同步最新紀錄"), 500);
+          }
+        }
+      }
       save();
 
     } catch (e) {
@@ -1949,8 +1977,11 @@
       ensureToday();
     }
 
-    document.getElementById("today-date").textContent = fmtDate(today);
-    document.getElementById("today-day").textContent = dayName(today);
+    // 1. 顯示邏輯：使用「真實日期」標題
+    const realDate = new Date();
+    document.getElementById("today-date").textContent = fmtDate(todayKey(realDate));
+    document.getElementById("today-day").textContent = realDate.toLocaleDateString("en-US",{weekday:"short"}).toUpperCase();
+    
     document.getElementById("chit-no").textContent = String(state.chitNo || 1).padStart(3, "0");
 
     timer.secs = state.timerSecs || 90;
@@ -1960,13 +1991,9 @@
     renderAll();
     scheduleReminder();
     
-    // Refresh greeting each hour
     setInterval(renderGreet, 60 * 60 * 1000);
-
-    // Hide loader
     setTimeout(() => document.getElementById("loading").classList.add("hide"), 300);
 
-    // Register Service Worker for offline PWA
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js").catch(() => {});
     }
@@ -1977,7 +2004,7 @@
   } else {
     init();
   }
-})();
+})(); // 這裡結束 IIFE
 </script>
 </body>
 </html>
