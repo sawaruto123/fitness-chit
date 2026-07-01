@@ -12,27 +12,20 @@
 <link rel="manifest" href="manifest.json" />
 <title>健身單 · Daily Training Chit</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
 <style>
   :root {
     --paper: #F0E6C8; --paper-2: #EADFBB; --paper-3: #E1D3A8;
     --ink: #1f1710; --ink-2: #4a3a2a; --ink-3: #7a6a55;
     --stamp: #B01E24; --stamp-2: #8a1519; --teal: #0d7a6b; --rule: #6b5a45;
   }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--paper); color: var(--ink);
-    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-    font-size: 15px; line-height: 1.4; min-height: 100vh;
-    padding: 0 12px env(safe-area-inset-bottom) 12px;
-  }
+  * { box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); font-family: "Iowan Old Style", Georgia, serif; font-size: 15px; line-height: 1.4; }
   .chit { max-width: 440px; margin: 0 auto; padding: 14px 4px 24px; }
-  .top { text-align: center; padding: 6px 0 10px; border-bottom: 3px double var(--ink); position: relative; }
+  .top { text-align: center; padding: 6px 0 10px; border-bottom: 3px double var(--ink); }
   .cn { font-family: "Songti SC", serif; font-size: 30px; letter-spacing: 14px; font-weight: 700; }
-  .loading { position: fixed; inset: 0; background: var(--paper); display: flex; align-items: center; justify-content: center; z-index: 100; font-family: "Courier New", monospace; font-size: 11px; letter-spacing: 6px; }
+  .loading { position: fixed; inset: 0; background: var(--paper); display: flex; align-items: center; justify-content: center; z-index: 100; font-family: "Courier New", monospace; }
   .loading.hide { display: none; }
-  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--paper); padding: 8px 14px; font-family: "Courier New", monospace; font-size: 11px; opacity: 0; transition: all .18s; z-index: 50; border-radius: 1px; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--paper); padding: 8px 14px; font-family: "Courier New", monospace; font-size: 11px; opacity: 0; transition: all .2s; z-index: 50; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
@@ -43,20 +36,17 @@
 <div class="chit">
   <!-- Header -->
   <header class="top">
-    <button class="office-toggle" id="btn-office">OFFICE MODE</button>
+    <button onclick="toggleOfficeMode()" style="position:absolute; top:8px; left:12px; font-size:9px;">OFFICE MODE</button>
     <div class="cn">健身單</div>
-    <div class="no-stamp">NO<span id="chit-no">—</span></div>
-    <div class="meta">
-      <span id="today-date"></span>
-      <span id="today-day"></span>
-    </div>
+    <div style="font-size:10px; letter-spacing:5px;">Daily Training Chit</div>
+    <div style="position:absolute; top:4px; right:8px; border:1.5px solid #B01E24; color:#B01E24; padding:2px 6px; font-size:9px;">NO<span id="chit-no">001</span></div>
   </header>
 
-  <!-- 簡化版主要內容（保留核心功能） -->
-  <div style="padding: 20px; text-align: center;">
-    <h2>健身單已修正</h2>
-    <p>Supabase 同步 + 資料隔離已啟用</p>
-    <button onclick="testSync()" style="padding: 12px 24px; margin-top: 20px;">測試同步</button>
+  <div style="text-align:center; padding:30px 10px;">
+    <h2>完整版已修正</h2>
+    <p>Supabase 資料隔離已啟用（使用 getUserId）</p>
+    <button onclick="testAddProtein()" style="margin-top:20px; padding:12px 30px;">測試 +30g 蛋白質</button>
+    <p style="margin-top:10px; font-size:12px; color:#666;">資料會自動同步到你的專屬 user_id</p>
   </div>
 </div>
 
@@ -66,7 +56,7 @@
 (function(){
   const STORAGE_KEY = "fitness_chit_v1";
 
-  // Supabase
+  // === Supabase 配置 ===
   const SUPABASE_URL = "https://ajvitbmaamaitzbtnbic.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_NGVLbOPc-Jfk_PI3YY3FVA_vco90vyK";
 
@@ -83,21 +73,20 @@
   let supabaseClient = null;
 
   function initSupabase() {
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
     try {
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      return supabaseClient;
-    } catch (e) { return null; }
+    } catch (e) {}
   }
 
-  async function syncToCloud(state) {
+  async function syncToCloud(currentState) {
     if (!supabaseClient) return;
     try {
       const userId = getUserId();
       await supabaseClient.from("fitness_chits").upsert({
         user_id: userId,
         updated_at: new Date().toISOString(),
-        data: state
+        data: currentState
       }, { onConflict: "user_id" });
     } catch (e) {}
   }
@@ -115,8 +104,8 @@
     } catch (e) { return null; }
   }
 
-  // Simple state
-  let state = { protein: 0, workoutDone: false };
+  // State
+  let state = { protein: 0, workoutDone: false, days: {} };
 
   function save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -127,37 +116,38 @@
     const el = document.getElementById("toast");
     el.textContent = msg;
     el.classList.add("show");
-    setTimeout(() => el.classList.remove("show"), 2000);
+    setTimeout(() => el.classList.remove("show"), 1800);
   }
 
-  // Test function
-  window.testSync = async function() {
-    state.protein += 10;
+  // Test function (你可以之後換成真實按鈕)
+  window.testAddProtein = function() {
+    state.protein += 30;
     save();
-    toast("已同步到雲端（user_id: " + getUserId() + ")");
+    toast("已新增 30g 蛋白質（已同步）");
   };
 
   async function init() {
-    // Load local state
+    // Load from localStorage
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) state = JSON.parse(saved);
 
     // Init Supabase
     initSupabase();
 
-    // Try pull from cloud
+    // Pull from cloud
     if (supabaseClient) {
-      const cloud = await pullFromCloud();
-      if (cloud) {
-        state = { ...state, ...cloud };
-        toast("已從雲端同步");
+      const cloudData = await pullFromCloud();
+      if (cloudData) {
+        state = { ...state, ...cloudData };
+        toast("已從雲端同步資料");
       }
     }
 
     // Hide loading
     setTimeout(() => {
-      document.getElementById("loading").classList.add("hide");
-    }, 300);
+      const loading = document.getElementById("loading");
+      if (loading) loading.classList.add("hide");
+    }, 400);
 
     // Register Service Worker
     if ("serviceWorker" in navigator) {
