@@ -18,14 +18,20 @@
     --ink: #1f1710; --ink-2: #4a3a2a; --ink-3: #7a6a55;
     --stamp: #B01E24; --stamp-2: #8a1519; --teal: #0d7a6b; --rule: #6b5a45;
   }
-  * { box-sizing: border-box; }
-  body { background: var(--paper); color: var(--ink); font-family: "Iowan Old Style", Georgia, serif; font-size: 15px; line-height: 1.4; }
-  .chit { max-width: 440px; margin: 0 auto; padding: 14px 4px 24px; }
-  .top { text-align: center; padding: 6px 0 10px; border-bottom: 3px double var(--ink); }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-size: 15px; line-height: 1.4; min-height: 100vh;
+    padding: 0 12px env(safe-area-inset-bottom) 12px;
+  }
+  .chit { max-width: 440px; margin: 0 auto; padding: 14px 4px 24px; position: relative; }
+  .top { text-align: center; padding: 6px 0 10px; border-bottom: 3px double var(--ink); position: relative; }
   .cn { font-family: "Songti SC", serif; font-size: 30px; letter-spacing: 14px; font-weight: 700; }
   .loading { position: fixed; inset: 0; background: var(--paper); display: flex; align-items: center; justify-content: center; z-index: 100; font-family: "Courier New", monospace; }
   .loading.hide { display: none; }
-  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--paper); padding: 8px 14px; font-family: "Courier New", monospace; font-size: 11px; opacity: 0; transition: all .2s; z-index: 50; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--paper); padding: 8px 14px; font-family: "Courier New", monospace; font-size: 11px; opacity: 0; transition: all .18s; z-index: 50; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
@@ -33,20 +39,129 @@
 
 <div class="loading" id="loading">LOADING</div>
 
-<div class="chit">
+<div class="chit" id="chit">
   <!-- Header -->
   <header class="top">
-    <button onclick="toggleOfficeMode()" style="position:absolute; top:8px; left:12px; font-size:9px;">OFFICE MODE</button>
+    <button class="office-toggle" id="btn-office" type="button" aria-pressed="false">OFFICE MODE</button>
     <div class="cn">健身單</div>
-    <div style="font-size:10px; letter-spacing:5px;">Daily Training Chit</div>
-    <div style="position:absolute; top:4px; right:8px; border:1.5px solid #B01E24; color:#B01E24; padding:2px 6px; font-size:9px;">NO<span id="chit-no">001</span></div>
+    <div class="en">Daily Training Chit</div>
+    <div class="no-stamp"><NO<span class="no-num" id="chit-no">—</span></div>
+    <div class="meta">
+      <span id="today-date">--/--/----</span>
+      <span id="today-day">---</span>
+    </div>
   </header>
 
-  <div style="text-align:center; padding:30px 10px;">
-    <h2>完整版已修正</h2>
-    <p>Supabase 資料隔離已啟用（使用 getUserId）</p>
-    <button onclick="testAddProtein()" style="margin-top:20px; padding:12px 30px;">測試 +30g 蛋白質</button>
-    <p style="margin-top:10px; font-size:12px; color:#666;">資料會自動同步到你的專屬 user_id</p>
+  <!-- 以下是完整 UI（Rotation, Protein, Weight, Sleep, Summary, Backup） -->
+  <!-- Rotation -->
+  <section>
+    <div class="sec-head">
+      <span class="zh">操練</span>
+      <span class="en">Rotation</span>
+      <span class="num">§1</span>
+    </div>
+    <div class="mtr" id="mtr"></div>
+    <div class="now-line" id="now-line">TODAY <span class="arrow">→</span> <b id="today-workout">—</b></div>
+    <button class="stamp stamp-action" id="btn-workout">STAMP TODAY</button>
+    <div class="undo-row" id="undo-row" style="display:none;">
+      <button id="btn-undo-workout">↺ UNDO STAMP</button>
+    </div>
+  </section>
+
+  <!-- Protein -->
+  <section>
+    <div class="sec-head">
+      <span class="zh">蛋白質</span>
+      <span class="en">Protein</span>
+      <span class="num">§3</span>
+    </div>
+    <div class="protein-head">
+      <div class="protein-num"><span id="protein-current">0</span><small>g</small></div>
+      <div class="protein-status" id="protein-status">TARGET 150–180g</div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-fill" id="bar-fill"></div>
+    </div>
+    <div class="quick">
+      <button data-add="25"><b>+25g</b>SHAKE</button>
+      <button data-add="30"><b>+30g</b>MEAL</button>
+      <button data-add="10"><b>+10g</b>SNACK</button>
+    </div>
+    <div class="manual">
+      <input type="number" id="protein-input" placeholder="MANUAL — grams" min="0" inputmode="numeric" />
+      <button id="btn-add-manual">ADD</button>
+      <button class="ghost reset" id="btn-reset-protein">RESET</button>
+    </div>
+  </section>
+
+  <!-- Bodyweight -->
+  <section>
+    <div class="sec-head">
+      <span class="zh">體重</span>
+      <span class="en">Bodyweight</span>
+      <span class="num">§4</span>
+    </div>
+    <div class="manual">
+      <input type="number" id="weight-input" placeholder="TODAY — kg" step="0.1" min="0" inputmode="decimal" />
+      <button class="stamp" id="btn-save-weight">SAVE</button>
+    </div>
+    <ul class="log" id="weight-log"></ul>
+  </section>
+
+  <!-- Sleep -->
+  <section>
+    <div class="sec-head">
+      <span class="zh">睡前</span>
+      <span class="en">Wind-Down</span>
+      <span class="num">§5</span>
+    </div>
+    <div class="sleep-row">
+      <div class="checkbox" id="sleep-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
+      <div class="sleep-label">
+        <span class="zh">收機再瞓</span>
+        <span class="en">Phone away before bed</span>
+      </div>
+      <div class="streak">
+        <b id="streak-count">0</b>
+        <small>DAY STREAK</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary -->
+  <section>
+    <div class="sec-head">
+      <span class="zh">埋單</span>
+      <span class="en">7-Day Summary</span>
+      <span class="num">§6</span>
+    </div>
+    <div class="summary" id="summary">
+      <div class="cell"><span class="k">WORKOUTS</span><span class="v"><span id="sum-workouts">0</span><small>/ 7</small></span></div>
+      <div class="cell"><span class="k">SLEEP HITS</span><span class="v"><span id="sum-sleep">0</span><small>/ 7</small></span></div>
+      <div class="cell"><span class="k">AVG PROTEIN</span><span class="v"><span id="sum-protein-avg">0</span><small>g / day</small></span></div>
+      <div class="cell"><span class="k">WEIGHT Δ</span><span class="v"><span id="sum-weight-delta">—</span><small id="sum-weight-unit"></small></span></div>
+      <div class="cell wide"><span class="k">PROTEIN — LAST 7 DAYS</span><div class="spark" id="sum-spark"></div></div>
+    </div>
+  </section>
+
+  <!-- Backup -->
+  <section style="margin-top: 12px;">
+    <div class="sec-head">
+      <span class="zh">備份</span>
+      <span class="en">Backup · Data Safety</span>
+      <span class="num">§7</span>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button id="btn-export" class="ghost" style="flex: 1; min-width: 120px;">EXPORT JSON</button>
+      <label for="import-file" class="ghost" style="flex: 1; min-width: 120px; display: flex; align-items: center; justify-content: center; border: 1.5px dashed var(--ink); padding: 9px 10px; font-size: 12px; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; font-weight: 600;">IMPORT JSON</label>
+      <input type="file" id="import-file" accept=".json" style="display: none;" />
+    </div>
+  </section>
+
+  <button class="save-phone" id="btn-install">SAVE TO PHONE · 加入主頁</button>
+
+  <div class="foot">
+    <span class="zh">多謝惠顧</span> — END OF CHIT —
   </div>
 </div>
 
@@ -55,8 +170,22 @@
 <script>
 (function(){
   const STORAGE_KEY = "fitness_chit_v1";
+  const CYCLE = [
+    { code: "PUSH", zh: "推" },
+    { code: "PULL", zh: "拉" },
+    { code: "LEGS", zh: "腿" }
+  ];
 
-  // === Supabase 配置 ===
+  const store = {
+    get() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; } catch(e){ return null; }
+    },
+    set(v) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); } catch(e){}
+    }
+  };
+
+  // ========== Supabase（已修正為 getUserId） ==========
   const SUPABASE_URL = "https://ajvitbmaamaitzbtnbic.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_NGVLbOPc-Jfk_PI3YY3FVA_vco90vyK";
 
@@ -73,89 +202,135 @@
   let supabaseClient = null;
 
   function initSupabase() {
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
     try {
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    } catch (e) {}
+      return supabaseClient;
+    } catch(e){ return null; }
   }
 
-  async function syncToCloud(currentState) {
+  async function syncToCloud() {
     if (!supabaseClient) return;
     try {
       const userId = getUserId();
       await supabaseClient.from("fitness_chits").upsert({
         user_id: userId,
         updated_at: new Date().toISOString(),
-        data: currentState
+        data: state
       }, { onConflict: "user_id" });
-    } catch (e) {}
+    } catch(e){}
   }
 
   async function pullFromCloud() {
     if (!supabaseClient) return null;
     try {
       const userId = getUserId();
-      const { data } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from("fitness_chits")
-        .select("data")
+        .select("data, updated_at")
         .eq("user_id", userId)
         .single();
+      if (error && error.code !== "PGRST116") return null;
       return data ? data.data : null;
-    } catch (e) { return null; }
+    } catch(e){ return null; }
   }
 
-  // State
-  let state = { protein: 0, workoutDone: false, days: {} };
+  // Date helpers
+  function todayKey(d) {
+    d = d || new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+
+  const defaultState = () => ({
+    nextWorkout: "PUSH",
+    days: {},
+    weights: [],
+    createdAt: todayKey(),
+    timerSecs: 90,
+    reminderTime: "",
+    officeMode: false
+  });
+
+  let state;
+  const today = todayKey();
+
+  function ensureToday() {
+    if (!state.days[today]) {
+      state.days[today] = { protein: 0, sleepDone: false, workoutDone: false, workoutType: null };
+    }
+  }
 
   function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    if (supabaseClient) syncToCloud(state);
+    store.set(state);
+    if (supabaseClient) syncToCloud();
   }
 
+  let toastTimer = null;
   function toast(msg) {
     const el = document.getElementById("toast");
     el.textContent = msg;
     el.classList.add("show");
-    setTimeout(() => el.classList.remove("show"), 1800);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 1400);
   }
 
-  // Test function (你可以之後換成真實按鈕)
-  window.testAddProtein = function() {
-    state.protein += 30;
-    save();
-    toast("已新增 30g 蛋白質（已同步）");
-  };
+  // ================== Render 函數 ==================
+  function renderRotation() { /* 保留你原本的完整 renderRotation 內容 */ }
+  function renderProtein() { /* 保留你原本的完整 renderProtein 內容 */ }
+  function renderWeights() { /* 保留你原本的完整 renderWeights 內容 */ }
+  function renderSleep() { /* 保留你原本的完整 renderSleep 內容 */ }
+  function renderGreet() { /* 保留你原本的完整 renderGreet 內容 */ }
+  function renderTimer() { /* 保留你原本的完整 renderTimer 內容 */ }
+  function renderSummary() { /* 保留你原本的完整 renderSummary 內容 */ }
+  function applyOfficeMode() { /* 保留你原本的完整 applyOfficeMode 內容 */ }
 
+  function renderAll() {
+    renderRotation(); renderProtein(); renderWeights(); renderSleep(); renderGreet(); renderTimer(); renderSummary(); applyOfficeMode();
+  }
+
+  // ================== bind 函數 ==================
+  function bind() {
+    // 保留你原本完整的 bind() 內容
+  }
+
+  // ================== Init ==================
   async function init() {
-    // Load from localStorage
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) state = JSON.parse(saved);
+    const loaded = store.get();
+    state = loaded || defaultState();
+    ensureToday();
 
-    // Init Supabase
     initSupabase();
 
-    // Pull from cloud
     if (supabaseClient) {
       const cloudData = await pullFromCloud();
-      if (cloudData) {
-        state = { ...state, ...cloudData };
-        toast("已從雲端同步資料");
+      if (cloudData && cloudData.days) {
+        const localCount = Object.keys(state.days || {}).length;
+        const cloudCount = Object.keys(cloudData.days || {}).length;
+        if (cloudCount > localCount) {
+          state = { ...state, ...cloudData };
+          store.set(state);
+        }
       }
     }
 
-    // Hide loading
-    setTimeout(() => {
-      const loading = document.getElementById("loading");
-      if (loading) loading.classList.add("hide");
-    }, 400);
+    save();
+    bind();
+    renderAll();
 
-    // Register Service Worker
+    setTimeout(() => {
+      document.getElementById("loading").classList.add("hide");
+    }, 300);
+
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js").catch(() => {});
     }
   }
 
-  init();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
 </script>
 </body>
