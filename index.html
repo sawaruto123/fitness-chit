@@ -291,6 +291,52 @@
     content: "✓ ";
   }
 
+  /* -------- Workout Log Table -------- */
+  .log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  .log-table td {
+    border-bottom: 1px dashed var(--rule);
+    padding: 8px 2px;
+    vertical-align: middle;
+  }
+  .log-table td:last-child { text-align: right; width: 40%; }
+  .log-table input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--ink);
+    text-align: right;
+    padding: 2px 0;
+  }
+  .log-table input::placeholder { color: rgba(122,106,85,0.4); }
+  .log-table input:focus {
+    outline: none;
+    border-bottom-color: var(--stamp);
+    background: rgba(255,255,255,0.3);
+  }
+  .log-table .ex-name {
+    font-family: "Songti SC", serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    display: block;
+  }
+  .log-table .ex-note {
+    display: block;
+    font-size: 9px;
+    color: var(--ink-3);
+    letter-spacing: 0;
+    margin-top: 2px;
+  }
+
   /* -------- Protein -------- */
   .protein-head {
     display: flex;
@@ -416,7 +462,7 @@
   }
   .log li {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
     align-items: baseline;
     gap: 10px;
     padding: 7px 4px;
@@ -446,8 +492,17 @@
     letter-spacing: 1px;
     border-bottom: 1px dashed var(--rule);
   }
+  .btn-del-weight {
+    border: none;
+    background: transparent;
+    color: var(--ink-3);
+    font-size: 13px;
+    padding: 0 4px;
+    cursor: pointer;
+  }
+  .btn-del-weight:active { color: var(--stamp); }
 
-  /* -------- Sleep -------- */
+  /* -------- Sleep / Wind-down -------- */
   .sleep-row {
     display: flex;
     align-items: center;
@@ -455,6 +510,12 @@
     padding: 10px 12px;
     border: 1.5px solid var(--ink);
     background: var(--paper-2);
+    margin-bottom: 6px;
+  }
+  .sleep-row.secondary {
+    border: 1px dashed var(--ink-3);
+    background: transparent;
+    padding: 8px 12px;
   }
   .checkbox {
     width: 30px; height: 30px;
@@ -471,6 +532,8 @@
     font-size: 18px;
     line-height: 1;
   }
+  .sleep-row.secondary .checkbox { width: 24px; height: 24px; font-size: 14px; }
+  
   .checkbox.on {
     background: var(--teal);
     border-color: var(--teal);
@@ -486,6 +549,7 @@
     letter-spacing: 2px;
     font-weight: 700;
   }
+  .sleep-row.secondary .sleep-label .zh { font-size: 12px; }
   .sleep-label .en {
     display: block;
     font-family: "Courier New", monospace;
@@ -613,25 +677,6 @@
     flex-shrink: 0;
   }
   .greet .msg { flex: 1; text-transform: uppercase; }
-
-  /* -------- Undo (ghost inline) -------- */
-  .undo-row {
-    display: flex;
-    justify-content: center;
-    margin-top: 6px;
-  }
-  .undo-row button {
-    border: none;
-    background: transparent;
-    color: var(--ink-3);
-    font-family: "Courier New", monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    padding: 4px 8px;
-    text-decoration: underline dashed;
-    text-underline-offset: 3px;
-  }
-  .undo-row button:active { color: var(--stamp); }
 
   /* -------- Rest Timer -------- */
   .timer-wrap {
@@ -782,13 +827,8 @@
 
   /* ---------- Office mode: discreet memo look ---------- */
   body.office { background: #f6f2e8; }
-  body.office .chit {
-    background-image: none;
-  }
-  body.office .no-stamp,
-  body.office .stamp-active,
-  body.office .greet,
-  body.office .save-phone { display: none !important; }
+  body.office .chit { background-image: none; }
+  body.office .no-stamp, body.office .stamp-active, body.office .greet, body.office .save-phone { display: none !important; }
   body.office .cn::before { content: "MEMO"; letter-spacing: 6px; font-family: "Courier New", monospace; font-size: 14px; font-weight: 700; }
   body.office .cn > * , body.office .cn { font-size: 0; }
   body.office .cn::before { font-size: 14px; }
@@ -796,17 +836,11 @@
   body.office .station.current { box-shadow: none; }
   body.office .station.current .dot { background: var(--ink); border-color: var(--ink); color: var(--paper); }
   body.office .station.done .dot { background: transparent; color: var(--ink-2); border-color: var(--ink-2); }
-  body.office button.stamp,
-  body.office .save-phone,
-  body.office .bar-fill,
-  body.office .bar-fill.done,
-  body.office .now-line b,
-  body.office .lbl-zh { color: var(--ink) !important; background: var(--ink) !important; border-color: var(--ink) !important; }
+  body.office button.stamp, body.office .save-phone, body.office .bar-fill, body.office .bar-fill.done, body.office .now-line b, body.office .lbl-zh { color: var(--ink) !important; background: var(--ink) !important; border-color: var(--ink) !important; }
   body.office button.stamp { color: var(--paper) !important; }
   body.office .bar-fill { background: var(--ink-2) !important; }
   body.office .lbl-zh, body.office .now-line b { background: transparent !important; }
-  body.office .sec-head .num,
-  body.office .sec-head .zh { color: var(--ink) !important; }
+  body.office .sec-head .num, body.office .sec-head .zh { color: var(--ink) !important; }
   body.office .toast { background: var(--ink); }
 
   .office-toggle {
@@ -892,9 +926,24 @@
       TODAY <span class="arrow">→</span> <b id="today-workout">—</b>
     </div>
     <button class="stamp stamp-action" id="btn-workout">STAMP TODAY</button>
-    <div class="undo-row" id="undo-row" style="display:none;">
+    <button class="ghost" id="btn-emergency" style="width: 100%; margin-top: 6px; padding: 10px; font-size: 11px;">應急訓練 (15 MIN)</button>
+    
+    <div class="undo-row" id="undo-row" style="display:none; gap: 12px;">
       <button id="btn-undo-workout">↺ UNDO STAMP</button>
     </div>
+  </section>
+
+  <div class="tear"></div>
+
+  <section id="sec-workout-log">
+    <div class="sec-head">
+      <span class="zh">課表</span>
+      <span class="en">Training Log</span>
+      <span class="num">§2</span>
+    </div>
+    <table class="log-table" id="log-table">
+      </table>
+    <button class="ghost" id="btn-save-log" style="width:100%; margin-top:10px;">SAVE LOG</button>
   </section>
 
   <div class="tear"></div>
@@ -903,7 +952,7 @@
     <div class="sec-head">
       <span class="zh">休息</span>
       <span class="en">Rest Timer</span>
-      <span class="num">§2</span>
+      <span class="num">§3</span>
     </div>
     <div class="timer-wrap">
       <div class="timer-display mono" id="timer-display">1:30</div>
@@ -927,7 +976,7 @@
     <div class="sec-head">
       <span class="zh">蛋白質</span>
       <span class="en">Protein</span>
-      <span class="num">§3</span>
+      <span class="num">§4</span>
     </div>
     <div class="protein-head">
       <div class="protein-num"><span id="protein-current">0</span><small>g</small></div>
@@ -958,7 +1007,7 @@
     <div class="sec-head">
       <span class="zh">體重</span>
       <span class="en">Bodyweight</span>
-      <span class="num">§4</span>
+      <span class="num">§5</span>
     </div>
     <div class="manual">
       <input type="number" id="weight-input" placeholder="TODAY — kg" step="0.1" min="0" inputmode="decimal" />
@@ -971,10 +1020,11 @@
 
   <section>
     <div class="sec-head">
-      <span class="zh">睡前</span>
-      <span class="en">Wind-Down</span>
-      <span class="num">§5</span>
+      <span class="zh">狀態</span>
+      <span class="en">Wind-Down & Readiness</span>
+      <span class="num">§6</span>
     </div>
+    
     <div class="sleep-row">
       <div class="checkbox" id="sleep-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
       <div class="sleep-label">
@@ -986,6 +1036,22 @@
         <small>DAY STREAK</small>
       </div>
     </div>
+
+    <div class="sleep-row secondary">
+      <div class="checkbox" id="caffeine-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
+      <div class="sleep-label">
+        <span class="zh">訓前6小時無咖啡因</span>
+        <span class="en">No Caffeine before bed</span>
+      </div>
+    </div>
+    <div class="sleep-row secondary">
+      <div class="checkbox" id="cooldown-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
+      <div class="sleep-label">
+        <span class="zh">最後10分鐘冷卻</span>
+        <span class="en">10 Min Cooldown</span>
+      </div>
+    </div>
+
   </section>
 
   <div class="tear"></div>
@@ -994,7 +1060,7 @@
     <div class="sec-head">
       <span class="zh">埋單</span>
       <span class="en">7-Day Summary</span>
-      <span class="num">§6</span>
+      <span class="num">§7</span>
     </div>
     <div class="summary" id="summary">
       <div class="cell">
@@ -1024,7 +1090,7 @@
     <div class="sec-head">
       <span class="zh">備份</span>
       <span class="en">Backup · Data Safety</span>
-      <span class="num">§7</span>
+      <span class="num">§8</span>
     </div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
       <button id="btn-export" class="ghost" style="flex: 1; min-width: 120px;">EXPORT JSON</button>
@@ -1091,6 +1157,29 @@
     { code: "PULL", zh: "拉" },
     { code: "LEGS", zh: "腿" }
   ];
+
+  const PPL_EXERCISES = {
+    PUSH: [
+      { id: "p1", name: "上斜啞鈴臥推", note: "4 x 6-10 | 微斜對手腕友善" },
+      { id: "p2", name: "啞鈴肩上推舉", note: "3 x 8-10 | 累可坐姿" },
+      { id: "p3", name: "胸推機 / 雙槓", note: "3 x 8-12 | 視手腕狀況" },
+      { id: "p4", name: "繩索側平舉", note: "3 x 12-15" },
+      { id: "p5", name: "繩索三頭下壓", note: "3 x 10-12" }
+    ],
+    PULL: [
+      { id: "u1", name: "羅馬尼亞硬拉", note: "4 x 6-8 | 主力動作" },
+      { id: "u2", name: "下拉 / 引體", note: "4 x 8-10" },
+      { id: "u3", name: "坐姿繩索划船", note: "3 x 10-12" },
+      { id: "u4", name: "臉拉 Face Pull", note: "3 x 15 | 保護肩膀" },
+      { id: "u5", name: "二頭肌彎舉", note: "3 x 10-12" }
+    ],
+    LEGS: [
+      { id: "l1", name: "腿推機 / 深蹲", note: "4 x 6-10 | 低能量選腿推" },
+      { id: "l2", name: "分腿蹲 / 弓步", note: "3 x 10/腿" },
+      { id: "l3", name: "腿彎舉", note: "3 x 10-12" },
+      { id: "l4", name: "提踵", note: "3 x 15" }
+    ]
+  };
 
   // ---------- Storage (window.storage → localStorage fallback) ----------
   const store = {
@@ -1161,7 +1250,7 @@
         .select("data, updated_at")
         .eq("user_id", userId)
         .single();
-      if (error && error.code !== "PGRST116") throw error; // PGRST116 = no rows
+      if (error && error.code !== "PGRST116") throw error;
       return data ? data.data : null;
     } catch(e) {
       console.warn("[chit] cloud pull failed", e);
@@ -1204,8 +1293,17 @@
 
   function ensureToday() {
     if (!state.days[today]) {
-      state.days[today] = { protein: 0, sleepDone: false, workoutDone: false, workoutType: null };
-      // Chit number = days since start + 1
+      state.days[today] = { 
+        protein: 0, 
+        sleepDone: false, 
+        caffeineFree: false,
+        cooldownDone: false,
+        workoutDone: false, 
+        workoutType: null,
+        isEmergency: false,
+        logs: {} // e.g. { "p1": "60kg x 8", "p2": "20kg x 10" }
+      };
+      
       if (state.createdAt) {
         const [y,m,d] = state.createdAt.split("-").map(Number);
         const [yy,mm,dd] = today.split("-").map(Number);
@@ -1230,11 +1328,12 @@
     toastTimer = setTimeout(() => el.classList.remove("show"), 1400);
   }
 
-  // ---------- Render: Rotation ----------
+  // ---------- Render: Rotation & Emergency ----------
   function renderRotation() {
     const mtr = document.getElementById("mtr");
     const day = state.days[today];
     const current = day.workoutDone ? day.workoutType : state.nextWorkout;
+    
     mtr.innerHTML = "";
     CYCLE.forEach((s) => {
       const el = document.createElement("div");
@@ -1255,25 +1354,54 @@
     const workoutSpan = document.getElementById("today-workout");
     if (day.workoutDone) {
       nowLine.classList.add("is-done");
-      workoutSpan.textContent = `${day.workoutType} · DONE`;
+      workoutSpan.textContent = `${day.workoutType}${day.isEmergency ? " (應急)" : ""} · DONE`;
     } else {
       nowLine.classList.remove("is-done");
       workoutSpan.textContent = state.nextWorkout;
     }
 
-    const btn = document.getElementById("btn-workout");
+    const btnNormal = document.getElementById("btn-workout");
+    const btnEmergency = document.getElementById("btn-emergency");
     const undoRow = document.getElementById("undo-row");
+    
     if (day.workoutDone) {
-      btn.textContent = "STAMPED";
-      btn.classList.add("done");
-      btn.disabled = true;
+      btnNormal.textContent = day.isEmergency ? "EMERGENCY STAMPED" : "STAMPED";
+      btnNormal.classList.add("done");
+      btnNormal.disabled = true;
+      btnEmergency.style.display = "none";
       if (undoRow) undoRow.style.display = "flex";
     } else {
-      btn.textContent = "STAMP TODAY";
-      btn.classList.remove("done");
-      btn.disabled = false;
+      btnNormal.textContent = "STAMP TODAY";
+      btnNormal.classList.remove("done");
+      btnNormal.disabled = false;
+      btnEmergency.style.display = "block";
       if (undoRow) undoRow.style.display = "none";
     }
+  }
+
+  // ---------- Render: Workout Log ----------
+  function renderLog() {
+    const table = document.getElementById("log-table");
+    const day = state.days[today];
+    // Always show the log for the workout that is happening TODAY (or was done today)
+    const activeCode = day.workoutDone ? day.workoutType : state.nextWorkout;
+    const exercises = PPL_EXERCISES[activeCode] || [];
+    const savedLogs = day.logs || {};
+
+    table.innerHTML = "";
+    exercises.forEach(ex => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>
+          <span class="ex-name">${ex.name}</span>
+          <span class="ex-note">${ex.note}</span>
+        </td>
+        <td>
+          <input type="text" data-ex-id="${ex.id}" placeholder="e.g. 60kg x 8" value="${savedLogs[ex.id] || ''}">
+        </td>
+      `;
+      table.appendChild(tr);
+    });
   }
 
   // ---------- Render: Protein ----------
@@ -1303,7 +1431,7 @@
   // ---------- Render: Weights ----------
   function renderWeights() {
     const log = document.getElementById("weight-log");
-    const list = state.weights.slice(-5).reverse(); // newest first
+    const list = state.weights.slice(-5).reverse();
     if (!list.length) {
       log.innerHTML = '<li class="empty">— no entries yet —</li>';
       return;
@@ -1324,12 +1452,13 @@
         <span class="date">${fmtDateShort(entry.date)}</span>
         <span class="kg">${entry.kg.toFixed(1)}<small>kg</small></span>
         ${trend}
+        <button class="btn-del-weight" data-date="${entry.date}" title="Delete entry">✕</button>
       `;
       log.appendChild(li);
     });
   }
 
-  // ---------- Render: Sleep ----------
+  // ---------- Render: Sleep & Readiness ----------
   function computeStreak() {
     let streak = 0;
     let cursor = today;
@@ -1342,9 +1471,19 @@
   }
   function renderSleep() {
     const day = state.days[today];
-    const box = document.getElementById("sleep-check");
-    box.classList.toggle("on", day.sleepDone);
-    box.setAttribute("aria-checked", String(day.sleepDone));
+    
+    const sleepBox = document.getElementById("sleep-check");
+    sleepBox.classList.toggle("on", !!day.sleepDone);
+    sleepBox.setAttribute("aria-checked", String(!!day.sleepDone));
+    
+    const cafBox = document.getElementById("caffeine-check");
+    cafBox.classList.toggle("on", !!day.caffeineFree);
+    cafBox.setAttribute("aria-checked", String(!!day.caffeineFree));
+    
+    const coolBox = document.getElementById("cooldown-check");
+    coolBox.classList.toggle("on", !!day.cooldownDone);
+    coolBox.setAttribute("aria-checked", String(!!day.cooldownDone));
+
     document.getElementById("streak-count").textContent = computeStreak();
   }
 
@@ -1542,25 +1681,38 @@
   }
 
   function renderAll() { 
-    renderRotation(); renderProtein(); renderWeights(); renderSleep(); renderGreet(); renderTimer(); renderSummary(); applyOfficeMode(); 
+    renderRotation(); renderLog(); renderProtein(); renderWeights(); renderSleep(); renderGreet(); renderTimer(); renderSummary(); applyOfficeMode(); 
   }
 
   // ---------- Events ----------
   function bind() {
-    document.getElementById("btn-workout").addEventListener("click", () => {
+    
+    // Core Workout Function Logic
+    function markWorkoutDone(isEmergency = false) {
       const day = state.days[today];
       if (day.workoutDone) return;
       day.workoutType = state.nextWorkout;
       day.workoutDone = true;
+      day.isEmergency = isEmergency;
+      
       const idx = CYCLE.findIndex(s => s.code === state.nextWorkout);
       state.nextWorkout = CYCLE[(idx + 1) % CYCLE.length].code;
-      save(); renderRotation(); renderGreet(); renderSummary();
+      
+      save(); renderRotation(); renderLog(); renderGreet(); renderSummary();
       if (navigator.vibrate) navigator.vibrate(30);
-      toast("Stamped · " + day.workoutType);
+    }
 
+    document.getElementById("btn-workout").addEventListener("click", () => {
+      markWorkoutDone(false);
+      toast("Stamped · " + state.days[today].workoutType);
       const stampBtn = document.getElementById("btn-workout");
       stampBtn.classList.add("success");
       setTimeout(() => stampBtn.classList.remove("success"), 650);
+    });
+
+    document.getElementById("btn-emergency").addEventListener("click", () => {
+      markWorkoutDone(true);
+      toast("Stamped Emergency · " + state.days[today].workoutType);
     });
 
     document.getElementById("btn-undo-workout").addEventListener("click", () => {
@@ -1569,8 +1721,31 @@
       state.nextWorkout = day.workoutType || state.nextWorkout;
       day.workoutDone = false;
       day.workoutType = null;
-      save(); renderRotation(); renderGreet(); renderSummary();
+      day.isEmergency = false;
+      save(); renderRotation(); renderLog(); renderGreet(); renderSummary();
       toast("Stamp undone");
+    });
+
+    // Save Log
+    document.getElementById("btn-save-log").addEventListener("click", () => {
+      const day = state.days[today];
+      if (!day.logs) day.logs = {};
+      
+      const inputs = document.querySelectorAll("#log-table input");
+      let savedAny = false;
+      inputs.forEach(input => {
+        const id = input.dataset.exId;
+        const val = input.value.trim();
+        if (val) {
+          day.logs[id] = val;
+          savedAny = true;
+        } else {
+          delete day.logs[id];
+        }
+      });
+      
+      save();
+      if(savedAny) toast("Log saved");
     });
 
     document.querySelectorAll("[data-add]").forEach(b => {
@@ -1619,15 +1794,37 @@
       if (e.key === "Enter") document.getElementById("btn-save-weight").click();
     });
 
-    const sleepBox = document.getElementById("sleep-check");
-    const toggleSleep = () => {
-      state.days[today].sleepDone = !state.days[today].sleepDone;
-      save(); renderSleep(); renderGreet(); renderSummary();
-    };
-    sleepBox.addEventListener("click", toggleSleep);
-    sleepBox.addEventListener("keydown", e => {
-      if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleSleep(); }
+    document.getElementById("weight-log").addEventListener("click", (e) => {
+      if (e.target.classList.contains("btn-del-weight")) {
+        const dateToDelete = e.target.dataset.date;
+        if (confirm(`Remove weight log for ${dateToDelete}?`)) {
+          state.weights = state.weights.filter(w => w.date !== dateToDelete);
+          save(); 
+          renderWeights(); 
+          renderSummary();
+          toast("Weight entry removed");
+        }
+      }
     });
+
+    // Sleep Checkboxes Logic
+    function toggleCheck(propName) {
+      state.days[today][propName] = !state.days[today][propName];
+      save(); renderSleep(); renderGreet(); renderSummary();
+    }
+
+    const sleepBox = document.getElementById("sleep-check");
+    sleepBox.addEventListener("click", () => toggleCheck("sleepDone"));
+    sleepBox.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleCheck("sleepDone"); } });
+
+    const cafBox = document.getElementById("caffeine-check");
+    cafBox.addEventListener("click", () => toggleCheck("caffeineFree"));
+    cafBox.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleCheck("caffeineFree"); } });
+
+    const coolBox = document.getElementById("cooldown-check");
+    coolBox.addEventListener("click", () => toggleCheck("cooldownDone"));
+    coolBox.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleCheck("cooldownDone"); } });
+
 
     document.querySelectorAll(".timer-presets button").forEach(b => {
       b.addEventListener("click", () => setPreset(parseInt(b.dataset.secs,10)));
@@ -1730,7 +1927,6 @@
       // Initialize Supabase 
       initSupabase();
 
-      // Pull from cloud and merge if there is newer/larger data
       if (supabaseClient) {
         const cloudData = await pullFromCloud();
         if (cloudData && cloudData.days) {
@@ -1744,7 +1940,7 @@
         }
       }
 
-      save(); // Also triggers cloud sync if needed
+      save();
 
     } catch (e) {
       console.warn("[chit] init failed, resetting", e);
@@ -1784,5 +1980,3 @@
 </script>
 </body>
 </html>
-
-```
