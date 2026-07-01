@@ -1,11 +1,14 @@
 // Simple Service Worker for 健身單 PWA
 // Provides offline caching + faster load + install stability
 
-const CACHE_NAME = 'fitness-chit-v1';
+// 1. UPDATE THIS NAME EVERY TIME YOU DEPLOY A NEW VERSION
+const CACHE_NAME = 'fitness-chit-v2'; 
+
+// 2. MAKE SURE THESE MATCH YOUR ACTUAL GITHUB FILES
 const ASSETS = [
-  './fitness-chit-improved.html',
+  './',               // Caches the root directory
+  './index.html',     // Updated to match your GitHub repo
   './manifest.json'
-  // Add more static assets here if you split CSS/JS later
 ];
 
 self.addEventListener('install', (event) => {
